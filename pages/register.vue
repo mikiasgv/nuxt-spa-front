@@ -7,16 +7,48 @@
                 items-center
                 justify-center
                 bg-gray-50
-                py-12
+                py-2
                 px-4
                 sm:px-6
                 lg:px-8
             "
         >
             <div class="max-w-md w-full space-y-2">
-                <form class="mt-8 space-y-6" @submit.prevent="login">
+                <form class="mt-8 space-y-6" @submit.prevent="register">
                     <input type="hidden" name="remember" value="true" />
                     <div class="rounded-md shadow-sm space-y-2">
+                        <div>
+                            <label for="name" class="sr-only"
+                                >Name</label
+                            >
+                            <input
+                                id="name"
+                                name="name"
+                                type="text"
+                                autocomplete="name"
+                                required
+                                class="
+                                    appearance-none
+                                    rounded-none
+                                    relative
+                                    block
+                                    w-full
+                                    px-3
+                                    py-2
+                                    border border-gray-300
+                                    placeholder-gray-500
+                                    text-gray-900
+                                    rounded-t-md
+                                    focus:outline-none
+                                    focus:ring-indigo-500
+                                    focus:border-indigo-500
+                                    focus:z-10
+                                    sm:text-sm
+                                "
+                                placeholder="name address"
+                                v-model="form.name"
+                            />
+                        </div>
                         <div>
                             <label for="email-address" class="sr-only"
                                 >Email address</label
@@ -81,44 +113,41 @@
                                 v-model="form.password"
                             />
                         </div>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
+                        <div>
+                            <label for="password" class="sr-only"
+                                >Password Confirmation</label
+                            >
                             <input
-                                id="remember_me"
-                                name="remember_me"
-                                type="checkbox"
+                                id="password_confirmation"
+                                name="password_confirmation"
+                                type="password"
+                                autocomplete="current-password_confirmation"
+                                required
                                 class="
-                                    h-4
-                                    w-4
-                                    text-indigo-600
+                                    appearance-none
+                                    rounded-none
+                                    relative
+                                    block
+                                    w-full
+                                    px-3
+                                    py-2
+                                    border border-gray-300
+                                    placeholder-gray-500
+                                    text-gray-900
+                                    rounded-b-md
+                                    focus:outline-none
                                     focus:ring-indigo-500
-                                    border-gray-300
-                                    rounded
+                                    focus:border-indigo-500
+                                    focus:z-10
+                                    sm:text-sm
                                 "
+                                placeholder="Password_confirmation"
+                                v-model="form.password_confirmation"
                             />
-                            <label
-                                for="remember_me"
-                                class="ml-2 block text-sm text-gray-900"
-                            >
-                                Remember me
-                            </label>
-                        </div>
-
-                        <div class="text-sm">
-                            <a
-                                href="#"
-                                class="
-                                    font-medium
-                                    text-indigo-600
-                                    hover:text-indigo-500
-                                "
-                            >
-                                Forgot your password?
-                            </a>
                         </div>
                     </div>
+
+
 
                     <div>
                         <button
@@ -174,7 +203,7 @@
                                     />
                                 </svg>
                             </span>
-                            Login
+                            Register
                         </button>
                     </div>
                 </form>
@@ -187,17 +216,21 @@ export default {
     data() {
         return {
             form: {
+                name: "",
                 email: "",
                 password: "",
+                password_confirmation: ""
             },
         };
     },
     methods: {
-        async login() {
+        async register() {
             try {
-                await this.$auth.loginWith("laravelSanctum", {
-                    data: this.form,
-                });
+              await this.$axios.get('sanctum/csrf-cookie');
+              await this.$axios.post('register', this.form);
+              await this.$auth.loginWith("laravelSanctum", {
+                  data: { email: this.form.email, password: this.form.password },
+              });
             } catch (e) {}
         },
     },
