@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AppNav />
+        <AppNav class="z-10" />
         <Nuxt />
     </div>
 </template>
