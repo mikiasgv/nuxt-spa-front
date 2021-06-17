@@ -10,6 +10,8 @@ export default {
   async mounted() {
     await this.$axios.get('api/dashboard');
     this.$maps.showMap(this.$refs.map, 33.749149, -90.71329);
+    // let marker = await this.$axios.get('api/markers');
+    // console.log(marker);
   },
 }
 </script>
